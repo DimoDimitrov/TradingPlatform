@@ -57,8 +57,46 @@ body {
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid #01a7e1;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   margin-top: auto;
 }
+
+.log-reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  height: 100vh;
+  margin-top: 15rem;
+}
+
+.log-reg-form input {
+  width: 20rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #000;
+  padding-left: 1rem;
+  text-align: center;
+  &::placeholder {
+    text-align: center;
+    color: #fff;
+  }
+}
+
+.log-reg-form button {
+  width: 20rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #000;
+  background-color: #01a7e1;
+}
+
+.log-reg-form button:hover {
+  background-color: #0080b3;
+}
+
+

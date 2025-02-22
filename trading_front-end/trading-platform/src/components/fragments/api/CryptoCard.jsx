@@ -1,7 +1,7 @@
-export default function CryptoCard() {
+export default function CryptoCard(props) {
     return (
         <div>
-            <h1>CryptoCard</h1>
+            <p>{props.cryptoData}</p>
         </div>
     )
 }
