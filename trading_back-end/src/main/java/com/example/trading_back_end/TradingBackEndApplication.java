@@ -26,10 +26,10 @@ public class TradingBackEndApplication implements CommandLineRunner {
         // Test inserting a user
         String insertSql = "INSERT INTO users (username, name, password, email, funds) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(insertSql, 
-            "testuser",
-            "Test User",
+            "testuser2",
+            "Test User2",
             "password123",
-            "test@example.com",
+            "test2@example.com",
             1000.00  // Initial funds amount
         );
 		
