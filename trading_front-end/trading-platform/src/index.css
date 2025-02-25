@@ -146,3 +146,130 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+
+.error {
+  color: red;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.success {
+  color: green;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.header-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #01a7e1;
+}
+
+.profile-container {
+  margin: 2rem auto 6rem auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  justify-content: center;
+}
+
+.profile-container h2 {
+  color: #01a7e1;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.profile-container p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.profile-assets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #14181b;
+  border-radius: 0.5rem;
+  border: 1px solid #01a7e1;
+  text-align: center;
+}
+
+.profile-transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #14181b;
+  border-radius: 0.5rem;
+  border: 1px solid #01a7e1;
+  text-align: center;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #14181b;
+  border-radius: 0.5rem;
+  border: 1px solid #01a7e1;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .profile-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.crypto-card-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  background-color: #14181b;
+  padding: 1rem;
+}
+
+.crypto-card-actions input {
+  width: 10rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #fff;
+  padding-left: 1rem;
+  text-align: center;
+  &::placeholder {
+    text-align: center;
+    color: #fff;
+  }
+}
+
+.crypto-card-actions button {
+  width: 10rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #fff;
+  background-color: #01a7e1;
+}
+
+.crypto-card-actions button:hover {
+  background-color: #0080b3;
+}

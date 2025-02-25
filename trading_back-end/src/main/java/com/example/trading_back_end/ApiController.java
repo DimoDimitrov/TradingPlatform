@@ -67,4 +67,69 @@ public class ApiController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/assets/buy")
+    public ResponseEntity<?> buyAsset(@RequestBody Map<String, Object> request) {
+        try {
+            String email = (String) request.get("email");
+            String symbol = (String) request.get("symbol");
+            double quantity = Double.parseDouble(request.get("quantity").toString());
+            double price = Double.parseDouble(request.get("price").toString());
+            
+            Assets asset = assetService.buyAsset(email, symbol, quantity, price);
+            return ResponseEntity.ok(asset);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/assets/sell")
+    public ResponseEntity<?> sellAsset(@RequestBody Map<String, Object> request) {
+        try {
+            String email = (String) request.get("email");
+            String symbol = (String) request.get("symbol");
+            double quantity = Double.parseDouble(request.get("quantity").toString());
+            double price = Double.parseDouble(request.get("price").toString());
+            
+            Assets asset = assetService.sellAsset(email, symbol, quantity, price);
+            return ResponseEntity.ok(asset);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/assets/{email}/{symbol}")
+    public ResponseEntity<?> deleteAsset(@PathVariable String email, @PathVariable String symbol) {
+        try {
+            assetService.deleteAsset(email, symbol);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/assets/{email}/{symbol}")
+    public ResponseEntity<?> updateAsset(
+            @PathVariable String email, 
+            @PathVariable String symbol, 
+            @RequestBody Map<String, Double> request) {
+        try {
+            double newQuantity = request.get("quantity");
+            double newPrice = request.get("price");
+            Assets asset = assetService.updateAsset(email, symbol, newQuantity, newPrice);
+            return ResponseEntity.ok(asset);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/assets/{email}/all")
+    public ResponseEntity<?> deleteAllAssets(@PathVariable String email) {
+        try {
+            assetService.deleteAllAssets(email);
+            return ResponseEntity.ok().body("All assets deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

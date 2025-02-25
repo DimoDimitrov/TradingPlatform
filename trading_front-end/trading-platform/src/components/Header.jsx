@@ -1,7 +1,10 @@
-export default function Header({isLoggedIn, setIsLoggedIn}) {
+import { Link } from 'react-router-dom';
+
+export default function Header({isLoggedIn, setIsLoggedIn, user, setUser}) {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
+        setUser(null);
     };
 
     return (
@@ -10,11 +13,14 @@ export default function Header({isLoggedIn, setIsLoggedIn}) {
             <text x="20" y="60" fontFamily="Arial, sans-serif" fontSize="40" fill="#e3ecef" fontWeight="bold">BG</text>
             <text x="90" y="60" fontFamily="Arial, sans-serif" fontSize="40" fill="#01a7e1">TRADING</text>
             </svg>
+            <div className="header-user">
+                {isLoggedIn && <p>{user.name} | {user.funds}</p>}
+            </div>
             <div className="header-links">
-                <a href="\">Dashboard</a>
-                <a href="\profile">Profile</a>
-                {!isLoggedIn ? <a href="\login">Login</a> : <a href="\logout" onClick={handleLogout}>Logout</a>}
-                {!isLoggedIn && <a href="\register">Register</a>}
+                <Link to="/">Dashboard</Link>
+                <Link to="/profile">Profile</Link>
+                {!isLoggedIn ? <Link to="/login">Login</Link> : <Link to="/" onClick={handleLogout}>Logout</Link>}
+                {!isLoggedIn && <Link to="/register">Register</Link>}
             </div>
         </div>
     )

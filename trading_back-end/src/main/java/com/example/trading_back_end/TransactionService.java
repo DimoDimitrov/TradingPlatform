@@ -24,19 +24,29 @@ public class TransactionService {
     private AssetService assetService;
 
     public List<Transactions> getUserTransactions(String userEmail) {
-        String sql = "SELECT * FROM transactions WHERE user_email = ? ORDER BY timestamp DESC";
-        return jdbcTemplate.query(sql, new Object[]{userEmail},
-            (rs, rowNum) -> new Transactions(
-                rs.getInt("id"),
-                rs.getInt("user_id"),
-                rs.getString("sign"),
-                rs.getDouble("price_of_completion"),
-                rs.getDouble("quantity"),
-                rs.getDouble("price_at_completion"),
-                rs.getString("transaction_type"),
-                rs.getString("timestamp")
-            )
-        );
+        try {
+            // First get the user ID from email
+            Users user = userService.getUserByEmail(userEmail);
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
+
+            String sql = "SELECT * FROM transactions WHERE user_id = ? ORDER BY timestamp DESC";
+            return jdbcTemplate.query(sql, new Object[]{user.getId()},
+                (rs, rowNum) -> new Transactions(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getString("sign"),
+                    rs.getDouble("price_of_completion"),
+                    rs.getDouble("quantity"),
+                    rs.getDouble("price_at_completion"),
+                    rs.getString("transaction_type"),
+                    rs.getString("timestamp")
+                )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching transactions: " + e.getMessage());
+        }
     }
 
     @Transactional

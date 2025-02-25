@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connectKrakenWebSocket } from './api/api_endpoint';
 import Chart from 'chart.js/auto';
 
-export default function Dashboard() {
+export default function Dashboard({isLoggedIn, setIsLoggedIn, user, setUser}) {
     const [cryptoData, setCryptoData] = useState({});
     const wsRef = useRef(null);
     const isConnected = useRef(false);
     const chartRefs = useRef({});
+
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     useEffect(() => {
         if (!isConnected.current) {
@@ -47,7 +50,6 @@ export default function Dashboard() {
         };
     }, []);
 
-    // Create or update chart
     const initChart = (canvasRef, symbol) => {
         if (!canvasRef || chartRefs.current[symbol]) return;
 
@@ -101,6 +103,17 @@ export default function Dashboard() {
         });
     };
 
+
+    const calculateSum = (e, symbol) => {
+        const amount = parseFloat(e.target.value) || 0;
+        const price = cryptoData[symbol]?.last || 0;
+        const sum = (amount * price).toFixed(2);
+        
+        const cardElement = e.target.closest('.crypto-card');
+        const sumInput = cardElement.querySelector('#sum');
+        sumInput.value = sum;
+    };
+
     return (
         <div className='dashboard-container'>
             <h1 className='dashboard-title'>Dashboard</h1>
@@ -128,7 +141,23 @@ export default function Dashboard() {
                         <div className="chart-container" style={{ height: '200px' }}>
                             <canvas ref={ref => initChart(ref, symbol)}></canvas>
                         </div>
-
+                        {isLoggedIn && <div className='crypto-card-actions'>
+                            <button className='buy-button'>Buy</button>
+                            <input 
+                                type="number" 
+                                onChange={(e) => calculateSum(e, symbol)}
+                                placeholder='Amount' 
+                            />
+                            <button className='sell-button'>Sell</button>
+                            <input 
+                                type="number" 
+                                id='sum' 
+                                placeholder='Sum of transaction' 
+                                readOnly
+                            />
+                        </div>}
+                        {error && <p className='error'>{error}</p>}
+                        {success && <p className='success'>{success}</p>}
                     </div>
                 ))}
               </div>}

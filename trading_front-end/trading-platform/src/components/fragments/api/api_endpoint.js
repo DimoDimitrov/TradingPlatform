@@ -28,7 +28,6 @@ export const connectKrakenWebSocket = (onDataUpdate) => {
         
         if (message.channel === "ticker" && message.data && Array.isArray(message.data)) {
             const tickerData = message.data[0];
-            console.log('Processing ticker data:', tickerData);
             
             if (tickerData) {
                 onDataUpdate(tickerData.symbol, {

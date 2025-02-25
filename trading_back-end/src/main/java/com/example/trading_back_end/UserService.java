@@ -36,7 +36,7 @@ public class UserService {
                     rs.getInt("id"),
                     rs.getString("username"),
                     rs.getString("name"),
-                    rs.getString("password"),
+                    null,
                     rs.getString("email"),
                     rs.getDouble("funds")
                 )
@@ -54,7 +54,7 @@ public class UserService {
                     rs.getInt("id"),
                     rs.getString("username"),
                     rs.getString("name"),
-                    rs.getString("password"),
+                    null,
                     rs.getString("email"),
                     rs.getDouble("funds")
                 )
