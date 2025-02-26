@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export default function Profile({isLoggedIn, setIsLoggedIn, user, setUser}) {
-    const [assets, setAssets] = useState([]);
+export default function Profile({isLoggedIn, setIsLoggedIn, user, setUser, assets, setAssets, transactions, setTransactions}) {
     const [error, setError] = useState(null);
-    const [transactions, setTransactions] = useState([]);
-
-    useEffect(() => {
-        if (user && user.email) {
-            fetchAssets();
-            fetchTransactions();
-        }
-    }, [user]);
 
     const resetAssets = async () => {
         if (!user || !user.email) {
@@ -33,39 +24,9 @@ export default function Profile({isLoggedIn, setIsLoggedIn, user, setUser}) {
             }
 
             setAssets([]);
-            fetchAssets(); 
+            setUser({...user, funds: 1000});
         } catch (err) {
             console.error('Reset assets error:', err);
-            setError(err.message);
-        }
-    };
-
-    const fetchAssets = async () => {
-        if (!user || !user.email) return;
-        
-        try {
-            const response = await fetch(`http://localhost:8080/assets/${user.email}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch assets');
-            }
-            const data = await response.json();
-            setAssets(data);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    const fetchTransactions = async () => {
-        if (!user || !user.email) return;
-        
-        try {
-            const response = await fetch(`http://localhost:8080/transactions/${user.email}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch transactions');
-            }
-            const data = await response.json();
-            setTransactions(data);
-        } catch (err) {
             setError(err.message);
         }
     };

@@ -40,13 +40,23 @@ public class AssetService {
     }
 
     public Assets getAsset(String userEmail, String symbol) {
-        String sql = "SELECT * FROM assets WHERE user_email = ? AND symbol = ?";
+        // Get user ID first
+        String userIdSql = "SELECT id FROM users WHERE email = ?";
+        Integer userId;
         try {
-            return jdbcTemplate.queryForObject(sql, new Object[]{userEmail, symbol},
+            userId = jdbcTemplate.queryForObject(userIdSql, new Object[]{userEmail}, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Then get asset for that user ID and symbol
+        String sql = "SELECT * FROM assets WHERE user_id = ? AND sign = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{userId, symbol},
                 (rs, rowNum) -> new Assets(
                     rs.getInt("id"),
                     rs.getInt("user_id"),
-                    rs.getString("symbol"),
+                    rs.getString("sign"),
                     rs.getDouble("quantity"),
                     rs.getDouble("bought_at")
                 )

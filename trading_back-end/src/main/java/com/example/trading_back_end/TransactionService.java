@@ -53,6 +53,10 @@ public class TransactionService {
     public Transactions createTransaction(Transactions transaction) {
         // Get user's current funds
         Users user = userService.getUserById(transaction.getUserId());
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + transaction.getUserId());
+        }
+
         double totalCost = transaction.getQuantity() * transaction.getPrice_of_completion();
         
         if (transaction.getTransaction_type().equals("BUY")) {
@@ -62,40 +66,35 @@ public class TransactionService {
             userService.updateUserFunds(user.getEmail(), user.getFunds() - totalCost);
         }
 
-        // Insert transaction
-        String sql = "INSERT INTO transactions (user_id, sign, price_of_completion, quantity, price_at_completion, transaction_type, timestamp) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, transaction.getUserId());
-            ps.setString(2, transaction.getSign());
-            ps.setDouble(3, transaction.getPrice_of_completion());
-            ps.setDouble(4, transaction.getQuantity());
-            ps.setDouble(5, transaction.getPrice_at_completion());
-            return ps;
-        }, keyHolder);
+        // Debug print
+        System.out.println("Attempting to insert transaction: " + transaction);
 
-        // Update asset
-        Assets currentAsset = assetService.getAsset(user.getEmail(), transaction.getSign());
-        double newQuantity;
-        double newAvgPrice;
+        // Simplified SQL query with backticks to escape column names
+        String sql = "INSERT INTO `transactions` (`user_id`, `sign`, `price_of_completion`, `quantity`, " +
+                    "`price_at_completion`, `transaction_type`) VALUES (?, ?, ?, ?, ?, ?)";
         
-        if (currentAsset == null) {
-            newQuantity = transaction.getQuantity();
-            newAvgPrice = transaction.getPrice_at_completion();
-        } else {
-            if (transaction.getTransaction_type().equals("BUY")) {
-                newQuantity = currentAsset.getQuantity() + transaction.getQuantity();
-                newAvgPrice = ((currentAsset.getQuantity() * currentAsset.getBought_at()) + 
-                             (transaction.getQuantity() * transaction.getPrice_at_completion())) / newQuantity;
-            } else {
-                newQuantity = currentAsset.getQuantity() - transaction.getQuantity();
-                newAvgPrice = currentAsset.getBought_at();
-            }
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, transaction.getUserId());
+                ps.setString(2, transaction.getSign());
+                ps.setDouble(3, transaction.getPrice_of_completion());
+                ps.setDouble(4, transaction.getQuantity());
+                ps.setDouble(5, transaction.getPrice_at_completion());
+                ps.setString(6, transaction.getTransaction_type());
+                
+                // Debug print
+                System.out.println("Prepared SQL: " + ps.toString());
+                
+                return ps;
+            }, keyHolder);
+        } catch (Exception e) {
+            // More detailed error message
+            System.err.println("Database error details: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Database error: " + e.getMessage());
         }
-        
-        assetService.updateAsset(user.getEmail(), transaction.getSign(), newQuantity, newAvgPrice);
 
         transaction.setId(keyHolder.getKey().intValue());
         return transaction;

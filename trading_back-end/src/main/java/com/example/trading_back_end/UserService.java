@@ -85,4 +85,13 @@ public class UserService {
             )
         );
     }
+
+    public Users updateUserFundsAndReturn(String email, double newFunds) {
+        String sql = "UPDATE users SET funds = ? WHERE email = ?";
+        int rowsAffected = jdbcTemplate.update(sql, newFunds, email);
+        if (rowsAffected == 0) {
+            throw new RuntimeException("User not found");
+        }
+        return getUserByEmail(email);
+    }
 }

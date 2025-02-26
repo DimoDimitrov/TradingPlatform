@@ -1,6 +1,44 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-export default function Header({isLoggedIn, setIsLoggedIn, user, setUser}) {
+export default function Header({isLoggedIn, setIsLoggedIn, user, setUser, assets, setAssets, transactions, setTransactions}) {
+
+    useEffect(() => {
+        if (user && user.email) {
+            fetchAssets();
+            fetchTransactions();
+        }
+    }, [user]);
+
+    const fetchAssets = async () => {
+        if (!user || !user.email) return;
+        
+        try {
+            const response = await fetch(`http://localhost:8080/assets/${user.email}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch assets');
+            }
+            const data = await response.json();
+            setAssets(data);
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+
+    const fetchTransactions = async () => {
+        if (!user || !user.email) return;
+        
+        try {
+            const response = await fetch(`http://localhost:8080/transactions/${user.email}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch transactions');
+            }
+            const data = await response.json();
+            setTransactions(data);
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
 
     const handleLogout = () => {
         setIsLoggedIn(false);

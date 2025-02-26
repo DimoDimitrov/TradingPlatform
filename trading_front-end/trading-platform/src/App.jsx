@@ -15,16 +15,18 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [user, setUser] = React.useState(null);
+  const [assets, setAssets] = React.useState([]);
+  const [transactions, setTransactions] = React.useState([]);
 
   return (
     <Router>
       <div className="app">
-        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} user={user} setUser={setUser} />
+        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} user={user} setUser={setUser} assets={assets} setAssets={setAssets} transactions={transactions} setTransactions={setTransactions}/>
         <Routes>
           <Route path="/" element={<Dashboard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
-           user={user} setUser={setUser}/>} />
+           user={user} setUser={setUser} assets={assets} setAssets={setAssets} transactions={transactions} setTransactions={setTransactions}/> } />
           <Route path="/profile" element={<Profile isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
-           user={user} setUser={setUser}/>} />
+           user={user} setUser={setUser} assets={assets} setAssets={setAssets} transactions={transactions} setTransactions={setTransactions}/>} />
           <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
            user={user} setUser={setUser}/>} />
           <Route path="/register" element={<Register isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
